@@ -1,9 +1,12 @@
-version: '3.9'
 services:
+
   jaeger:
     image: jaegertracing/all-in-one:1.51.0
     container_name: jaeger
     restart: always
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.5
     # ports:
     #   - "16686:16686"
 
@@ -15,6 +18,9 @@ services:
     volumes:
       - ./otel-trace-collector-config.yaml:/etc/otel-collector-config.yaml
     hostname: otel-collector
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.6
     # ports:
     #   - "13133:13133" # 健康检查扩展
     #   - "4317:4317"   # OTLP gRPC 接收器
@@ -26,6 +32,9 @@ services:
     container_name: emqx1
     restart: always
     hostname: emqx1-cluster.emqx.io
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.2
     environment:
       - EMQX_NODE__NAME=emqx1@emqx1-cluster.emqx.io
       - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
@@ -41,6 +50,9 @@ services:
     container_name: emqx2
     restart: always
     hostname: emqx2-cluster.emqx.io
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.3
     environment:
       - EMQX_NODE__NAME=emqx2@emqx2-cluster.emqx.io
       - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
@@ -56,6 +68,9 @@ services:
     container_name: emqx3
     restart: always
     hostname: emqx3-cluster.emqx.io
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.4
     environment:
       - EMQX_NODE__NAME=emqx3@emqx3-cluster.emqx.io
       - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
@@ -111,4 +126,7 @@ services:
 
 networks:
   emqx-net:
-    driver: emqx-net
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+    driver: bridge
