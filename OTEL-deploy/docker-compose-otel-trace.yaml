@@ -1,17 +1,7 @@
 services:
 
-  jaeger:
-    image: jaegertracing/all-in-one:1.51.0
-    container_name: jaeger
-    restart: always
-    networks:
-      emqx-net:
-        ipv4_address: 172.19.0.5
-    # ports:
-    #   - "16686:16686"
-
   otel-collector:
-    image: otel/opentelemetry-collector:0.90.0
+    image: otel/opentelemetry-collector-contrib:0.109.0-amd64
     restart: always
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
@@ -20,18 +10,35 @@ services:
     hostname: otel-collector
     networks:
       emqx-net:
-        ipv4_address: 172.19.0.6
-    # ports:
-    #   - "13133:13133" # 健康检查扩展
-    #   - "4317:4317"   # OTLP gRPC 接收器
+        ipv4_address: 172.19.0.10
     depends_on:
-      - jaeger
+      - influxdbv1
+
+  influxdbv1:
+    image: influxdb:1.8
+    container_name: influxdbv1
+    restart: always
+    hostname: influxdbv1
+    environment:
+      - INFLUXDB_DB=mydb                    # 初始化数据库名称
+      - INFLUXDB_ADMIN_USER=admin           # 管理员用户名
+      - INFLUXDB_ADMIN_PASSWORD=public123   # 管理员密码
+      - INFLUXDB_USER=myuser                # 普通用户
+      - INFLUXDB_USER_PASSWORD=userpassword # 普通用户密码
+      - INFLUXDB_HTTP_AUTH_ENABLED=true     # 启用 HTTP 身份验证
+    volumes:
+      - ./influxdb-v1-data:/var/lib/influxdb
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.20
 
   emqx1:
     image: emqx/emqx-enterprise:5.8.0
     container_name: emqx1
     restart: always
     hostname: emqx1-cluster.emqx.io
+    volumes:
+      - ./emqx1-data:/opt/emqx/data
     networks:
       emqx-net:
         ipv4_address: 172.19.0.2
@@ -44,12 +51,16 @@ services:
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io
+    depends_on:
+      - otel-collector
 
   emqx2:
     image: emqx/emqx-enterprise:5.8.0
     container_name: emqx2
     restart: always
     hostname: emqx2-cluster.emqx.io
+    volumes:
+      - ./emqx2-data:/opt/emqx/data
     networks:
       emqx-net:
         ipv4_address: 172.19.0.3
@@ -62,12 +73,16 @@ services:
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io
+    depends_on:
+      - otel-collector
 
   emqx3:
     image: emqx/emqx-enterprise:5.8.0
     container_name: emqx3
     restart: always
     hostname: emqx3-cluster.emqx.io
+    volumes:
+      - ./emqx3-data:/opt/emqx/data
     networks:
       emqx-net:
         ipv4_address: 172.19.0.4
@@ -80,6 +95,8 @@ services:
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io
+    depends_on:
+      - otel-collector
 
   # emqx-rep1:
   #   image: emqx/emqx-enterprise:5.8.0-alpha.1-gbc25fd3c

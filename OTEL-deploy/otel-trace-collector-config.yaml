@@ -4,10 +4,14 @@ receivers:
       grpc:
 
 exporters:
-  otlp:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
+  # use infulxdb exporter to write in datalayers
+  influxdb/v1:
+    endpoint: http://influxdbv1:8086
+    v1_compatibility:
+      enabled: true
+      db: mydb
+      username: admin
+      password: public123
 
 processors:
   batch:
@@ -21,4 +25,4 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [influxdb/v1]
