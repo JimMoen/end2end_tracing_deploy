@@ -7,7 +7,6 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 exporters:
-  # use infulxdb exporter to write in datalayers
   influxdb/v1:
     endpoint: http://nginx:8086
     v1_compatibility:
@@ -16,13 +15,10 @@ exporters:
       username: admin
       password: public123
 
-  influxdb/datalayers:
-    endpoint: http://nginx:8086
-    v1_compatibility:
-      enabled: true
-      db: mydb
-      username: admin
-      password: public123
+  otlp:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
 
 processors:
   batch:
@@ -38,4 +34,4 @@ service:
       processors: [batch]
       exporters:
         - influxdb/v1
-        - influxdb/datalayers
+        - otlp
