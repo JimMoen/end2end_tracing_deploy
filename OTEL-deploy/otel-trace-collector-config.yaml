@@ -9,6 +9,22 @@ receivers:
 exporters:
   influxdb/v1:
     endpoint: http://nginx:8086
+    span_dimensions:
+      ## Span Name always as the first tag
+      - span.name
+      - service.name
+      # Client CONNECT span
+      - client.connect.clientid
+      - client.connect.username
+      - client.connect.peername
+      # Client DISCONNECT span
+      - client.disconnect.clientid
+      - client.disconnect.username
+      # Client SUBSCRIBE span
+      - client.subscribe.topic_filters
+      # Client UNSUBSCRIBE span
+      - client.unsubscribe.topic_filters
+      - message.msg_id
     v1_compatibility:
       enabled: true
       db: mydb

@@ -10,7 +10,7 @@ services:
     hostname: otel-collector
     networks:
       emqx-net:
-        ipv4_address: 172.19.0.10
+        ipv4_address: 172.19.0.10 # 4317
     depends_on:
       - influxdbv1
 
