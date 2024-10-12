@@ -9,7 +9,7 @@ receivers:
 exporters:
   influxdb/v1:
     endpoint: http://nginx:8086
-    span_dimensions:
+    span_dimensions: []
       ## Span Name always as the first tag
       - span.name
       - service.name
