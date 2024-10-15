@@ -10,21 +10,6 @@ exporters:
   influxdb/v1:
     endpoint: http://nginx:8086
     span_dimensions: []
-      ## Span Name always as the first tag
-      - span.name
-      - service.name
-      # Client CONNECT span
-      - client.connect.clientid
-      - client.connect.username
-      - client.connect.peername
-      # Client DISCONNECT span
-      - client.disconnect.clientid
-      - client.disconnect.username
-      # Client SUBSCRIBE span
-      - client.subscribe.topic_filters
-      # Client UNSUBSCRIBE span
-      - client.unsubscribe.topic_filters
-      - message.msg_id
     v1_compatibility:
       enabled: true
       db: mydb
@@ -38,6 +23,27 @@ exporters:
 
 processors:
   batch:
+  resource:
+    attributes:
+      - key: 'otel.library.name'
+        action: delete
+      - key: 'otel.library.version'
+        action: delete
+      - key: 'process.executable.name'
+        action: delete
+      - key: 'process.runtime.description'
+        action: delete
+      - key: 'process.runtime.name'
+        action: delete
+      - key: 'process.runtime.version'
+        action: delete
+      - key: 'telemetry.sdk.language'
+        action: delete
+      - key: 'telemetry.sdk.name'
+        action: delete
+      - key: 'telemetry.sdk.version'
+        action: delete
+
 
 extensions:
   health_check:
@@ -47,7 +53,5 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
-      exporters:
-        - influxdb/v1
-        - otlp
+      processors: [resource, batch]
+      exporters: [influxdb/v1, otlp]
