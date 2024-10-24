@@ -71,11 +71,6 @@ exporters:
         span_fields:
         - attr1
 
-  otlp:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-
 processors:
   batch:
   resource:
@@ -98,7 +93,6 @@ processors:
         action: delete
       - key: 'telemetry.sdk.version'
         action: delete
-
 
 extensions:
   health_check:

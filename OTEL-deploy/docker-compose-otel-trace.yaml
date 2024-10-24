@@ -12,7 +12,7 @@ services:
       emqx-net:
         ipv4_address: 172.19.0.10 # 4317
     depends_on:
-      - influxdbv1
+      - datalayers
 
   nginx:
     image: nginx:latest
@@ -29,27 +29,7 @@ services:
       emqx-net:
         ipv4_address: 172.19.0.19
     depends_on:
-      - influxdbv1
       - datalayers
-
-  influxdbv1:
-    image: influxdb:1.8
-    container_name: influxdbv1
-    restart: always
-    hostname: influxdbv1
-    environment:
-      - INFLUXDB_DB=mydb                    # 初始化数据库名称
-      - INFLUXDB_ADMIN_USER=admin           # 管理员用户名
-      - INFLUXDB_ADMIN_PASSWORD=public123   # 管理员密码
-      - INFLUXDB_USER=myuser                # 普通用户
-      - INFLUXDB_USER_PASSWORD=userpassword # 普通用户密码
-      - INFLUXDB_HTTP_AUTH_ENABLED=true     # 启用 HTTP 身份验证
-      - INFLUXDB_DATA_MAX_VALUES_PER_TAG=0
-    volumes:
-      - ./influxdb-v1-data:/var/lib/influxdb
-    networks:
-      emqx-net:
-        ipv4_address: 172.19.0.20
 
   datalayers:
     image: datalayers/datalayers:v2.2.1
@@ -62,18 +42,8 @@ services:
       emqx-net:
         ipv4_address: 172.19.0.30
 
-  jaeger:
-    image: jaegertracing/all-in-one:1.51.0
-    container_name: jaeger
-    restart: always
-    ports:
-      - "16686:16686"
-    networks:
-      emqx-net:
-        ipv4_address: 172.19.0.21
-
   emqx1:
-    image: emqx/emqx-enterprise:5.8.0
+    image: emqx/emqx-enterprise:5.8.1-ga5ce5fba
     container_name: emqx1
     restart: always
     hostname: emqx1-cluster.emqx.io
@@ -85,17 +55,17 @@ services:
     environment:
       - EMQX_NODE__NAME=emqx1@emqx1-cluster.emqx.io
       - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
-      - EMQX_LOG__CONSOLE__LEVEL=debug
+      - EMQX_LOG__CONSOLE__LEVEL=error
       - EMQX_DASHBOARD__DEFAULT_PASSWORD=public123
       - EMQX_OPENTELEMETRY__EXPORTER__ENDPOINT="http://otel-collector:4317"
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
-      - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io
+      - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io
     depends_on:
       - otel-collector
 
   emqx2:
-    image: emqx/emqx-enterprise:5.8.0
+    image: emqx/emqx-enterprise:5.8.1-ga5ce5fba
     container_name: emqx2
     restart: always
     hostname: emqx2-cluster.emqx.io
@@ -107,79 +77,14 @@ services:
     environment:
       - EMQX_NODE__NAME=emqx2@emqx2-cluster.emqx.io
       - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
-      - EMQX_LOG__CONSOLE__LEVEL=debug
+      - EMQX_LOG__CONSOLE__LEVEL=error
       - EMQX_DASHBOARD__DEFAULT_PASSWORD=public123
       - EMQX_OPENTELEMETRY__EXPORTER__ENDPOINT="http://otel-collector:4317"
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
-      - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io
+      - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io
     depends_on:
       - otel-collector
-
-  emqx3:
-    image: emqx/emqx-enterprise:5.8.0
-    container_name: emqx3
-    restart: always
-    hostname: emqx3-cluster.emqx.io
-    volumes:
-      - ./emqx3-data:/opt/emqx/data
-    networks:
-      emqx-net:
-        ipv4_address: 172.19.0.4
-    environment:
-      - EMQX_NODE__NAME=emqx3@emqx3-cluster.emqx.io
-      - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
-      - EMQX_LOG__CONSOLE__LEVEL=debug
-      - EMQX_DASHBOARD__DEFAULT_PASSWORD=public123
-      - EMQX_OPENTELEMETRY__EXPORTER__ENDPOINT="http://otel-collector:4317"
-      - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
-      - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
-      - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io
-    depends_on:
-      - otel-collector
-
-  # emqx-rep1:
-  #   image: emqx/emqx-enterprise:5.8.0-alpha.1-gbc25fd3c
-  #   container_name: emqx-rep1
-  #   hostname: emqx-rep1-cluster.emqx.io
-  #   environment:
-  #     - EMQX_NODE__NAME=emqx-rep1@emqx-rep1-cluster.emqx.io
-  #     - EMQX_NODE__ROLE=replicant
-  #     - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
-  #     - EMQX_LOG__CONSOLE__LEVEL=debug
-  #     - EMQX_DASHBOARD__DEFAULT_PASSWORD=public123
-  #     - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io,emqx-rep1@emqx-rep1-cluster.emqx.io,emqx-rep2@emqx-rep2-cluster.emqx.io,emqx-rep3@emqx-rep3-cluster.emqx.io
-
-  # emqx-rep2:
-  #   image: emqx/emqx-enterprise:5.8.0-alpha.1-gbc25fd3c
-  #   container_name: emqx-rep2
-  #   hostname: emqx-rep2-cluster.emqx.io
-  #   environment:
-  #     - EMQX_NODE__NAME=emqx-rep2@emqx-rep2-cluster.emqx.io
-  #     - EMQX_NODE__ROLE=replicant
-  #     - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
-  #     - EMQX_LOG__CONSOLE__LEVEL=debug
-  #     - EMQX_DASHBOARD__DEFAULT_PASSWORD=public123
-  #     - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io,emqx-rep1@emqx-rep1-cluster.emqx.io,emqx-rep2@emqx-rep2-cluster.emqx.io,emqx-rep3@emqx-rep3-cluster.emqx.io
-
-  # emqx-rep3:
-  #   image: emqx/emqx-enterprise:5.8.0-alpha.1-gbc25fd3c
-  #   container_name: emqx-rep3
-  #   hostname: emqx-rep3-cluster.emqx.io
-  #   environment:
-  #     - EMQX_NODE__NAME=emqx-rep3@emqx-rep3-cluster.emqx.io
-  #     - EMQX_NODE__ROLE=replicant
-  #     - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
-  #     - EMQX_LOG__CONSOLE__LEVEL=debug
-  #     - EMQX_DASHBOARD__DEFAULT_PASSWORD=public123
-  #     - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io,emqx3@emqx3-cluster.emqx.io,emqx-rep1@emqx-rep1-cluster.emqx.io,emqx-rep2@emqx-rep2-cluster.emqx.io,emqx-rep3@emqx-rep3-cluster.emqx.io
-
-  # nginx:
-  #   image: nginx
-  #   container_name: nginx
-  #   volumes:
-  #     - $PWD/nginx.conf:/etc/nginx/nginx.conf
-  #     - $PWD/certs:/etc/nginx/certs
 
 networks:
   emqx-net:
