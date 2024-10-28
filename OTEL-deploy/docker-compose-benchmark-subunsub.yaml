@@ -1,0 +1,28 @@
+services:
+
+  node1-sub-unsub:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node1-sub-unsub
+    command: "sub -q 1 -i 1 -h 172.19.0.2 -u admin -P public123 -c 500 --prefix n1-sub-unsub --multi-topic --multi-topic-count 500"
+    hostname: node1-sub-unsub
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.41
+
+  node2-sub-unsub:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node2-sub-unsub
+    command: "sub -q 1 -i 1 -h 172.19.0.3 -u admin -P public123 -c 500 --prefix n2-sub-unsub --multi-topic --multi-topic-count 500"
+    hostname: node2-sub-unsub
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.42
+
+networks:
+  emqx-net:
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+    driver: bridge

@@ -1,0 +1,111 @@
+services:
+
+  node1-sub-a:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node1-sub-a
+    hostname: node1-sub-a
+    command: "sub -h 172.19.0.2 --prefix node1-sub-a -t topic-a/%i -q 1 -i 2 -u admin -P public123 -c 1000"
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.31
+
+  node1-sub-c:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node1-sub-c
+    hostname: node1-sub-c
+    command: "sub -h 172.19.0.2 --prefix node1-sub-c -t topic-c/%i -q 1 -i 2 -u admin -P public123 -c 1000"
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.32
+
+  node2-sub-b:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node2-sub-b
+    hostname: node2-sub-b
+    command: "sub -h 172.19.0.3 --prefix node2-sub-b -t topic-b/%i -q 1 -i 2 -u admin -P public123 -c 1000"
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.33
+
+  node2-sub-d:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node2-sub-d
+    hostname: node2-sub-d
+    command: "sub -h 172.19.0.3 --prefix node2-sub-d -t topic-d/%i -q 1 -i 2 -u admin -P public123 -c 1000"
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.34
+
+
+
+  node1-pub-a:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node1-pub-a
+    hostname: node1-pub-a
+    command: "pub -h 172.19.0.2 --prefix node1-pub-a -t topic-a/%i -q 1 -s 10000 -i 2 -u admin -P public123 -c 1000 -L 1000000"
+    depends_on:
+      - node1-sub-a
+      - node2-sub-b
+      - node1-sub-c
+      - node2-sub-d
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.41
+
+  node1-pub-b:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node1-pub-b
+    hostname: node1-pub-b
+    command: "pub -h 172.19.0.2 --prefix node1-pub-b -t topic-b/%i -q 1 -s 10000 -i 2 -u admin -P public123 -c 1000 -L 1000000"
+    depends_on:
+      - node1-sub-a
+      - node2-sub-b
+      - node1-sub-c
+      - node2-sub-d
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.42
+
+  node2-pub-c:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node2-pub-c
+    hostname: node2-pub-c
+    command: "pub -h 172.19.0.3 --prefix node2-pub-c -t topic-c/%i -q 1 -s 10000 -i 2 -u admin -P public123 -c 1000 -L 1000000"
+    depends_on:
+      - node1-sub-a
+      - node2-sub-b
+      - node1-sub-c
+      - node2-sub-d
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.43
+
+  node2-pub-d:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node2-pub-d
+    hostname: node2-pub-d
+    command: "pub -h 172.19.0.3 --prefix node2-pub-d -t topic-d/%i -q 1 -s 10000 -i 2 -u admin -P public123 -c 1000 -L 1000000"
+    depends_on:
+      - node1-sub-a
+      - node2-sub-b
+      - node1-sub-c
+      - node2-sub-d
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.44
+
+
+networks:
+  emqx-net:
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+    driver: bridge

@@ -1,0 +1,48 @@
+services:
+
+  node1-bench1:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node1-bench1
+    command: ["conn", "-i", "2", "-h",  "172.19.0.2", "-u", "admin", "-P", "public123", "-c", "25000", "--prefix", "node1-bench1"]
+    hostname: node1-bench1
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.31
+
+  node1-bench2:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node1-bench2
+    command: ["conn", "-i", "2", "-h",  "172.19.0.2", "-u", "admin", "-P", "public123", "-c", "25000", "--prefix", "node1-bench2"]
+    hostname: node1-bench2
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.32
+
+  node2-bench1:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node2-bench1
+    command: ["conn", "-i", "2", "-h",  "172.19.0.3", "-u", "admin", "-P", "public123", "-c", "25000", "--prefix", "node2-bench1"]
+    hostname: node2-bench1
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.33
+
+  node2-bench2:
+    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    restart: always
+    container_name: node2-bench2
+    command: ["conn", "-i", "2", "-h",  "172.19.0.3", "-u", "admin", "-P", "public123", "-c", "25000", "--prefix", "node2-bench2"]
+    hostname: node2-bench2
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.34
+
+networks:
+  emqx-net:
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
+    driver: bridge
