@@ -42,6 +42,14 @@ services:
       emqx-net:
         ipv4_address: 172.19.0.30
 
+  jaeger:
+    image: jaegertracing/all-in-one:1.62.0
+    container_name: jaeger
+    restart: always
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.21
+
   emqx1:
     image: emqx/emqx-enterprise:5.8.1-ga5ce5fba
     container_name: emqx1

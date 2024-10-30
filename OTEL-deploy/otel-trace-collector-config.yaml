@@ -71,6 +71,11 @@ exporters:
         span_fields:
         - attr1
 
+  otlp:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+
 processors:
   batch:
   resource:
