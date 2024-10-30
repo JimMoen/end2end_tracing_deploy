@@ -7,14 +7,69 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 exporters:
-  influxdb/v1:
+  datalayers:
     endpoint: http://nginx:8086
-    span_dimensions: []
-    v1_compatibility:
-      enabled: true
-      db: mydb
-      username: admin
-      password: public123
+    db: mydb
+    username: admin
+    password: public
+    timeout: 500ms
+    trace:
+      table: spans
+      span_dimensions:
+      - service.name
+      - trace_id
+      span_fields: []
+      custom_key_scope: name
+      custom:
+      - key:
+        - client.connect
+        - client.authn
+        - client.authz
+        - client.connack
+        - client.subscribe
+        - client.unsubscribe
+        - client.disconnect
+        table: client_events 
+        span_dimensions:
+        - client.clientid
+        span_fields:
+        - service.instance.id
+        - client.subscribe.topics
+        - client.unsubscribe.topics
+        - client.connect.authn.result
+        - authz.subscribe.result
+        - authz.publish.result
+
+      - key:
+        - client.publish
+        - message.route
+        - message.dispatch
+        - message.deliver
+        - message.forward
+        - message.handle_forward
+        table: message_events
+        span_dimensions:
+        - message.topic
+        span_fields:
+        - message.from
+        - client.clientid
+        - service.instance.id
+
+      - key:
+        - client.puback
+        - client.pubrec
+        - client.pubrel
+        - client.pubcomp
+        - emqx.puback
+        - emqx.pubrec
+        - emqx.pubrel
+        - emqx.pubcomp
+        table: todo_events
+        span_dimensions:
+        - service.name
+        - trace_id
+        span_fields:
+        - attr1
 
   otlp:
     endpoint: jaeger:4317
@@ -54,4 +109,4 @@ service:
     traces:
       receivers: [otlp]
       processors: [resource, batch]
-      exporters: [influxdb/v1, otlp]
+      exporters: [datalayers, otlp]

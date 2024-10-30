@@ -1,7 +1,7 @@
 services:
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.111.0-amd64
+    image: emqxecp/otelcol:test
     restart: always
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
@@ -30,6 +30,7 @@ services:
         ipv4_address: 172.19.0.19
     depends_on:
       - influxdbv1
+      - datalayers
 
   influxdbv1:
     image: influxdb:1.8
@@ -50,13 +51,23 @@ services:
       emqx-net:
         ipv4_address: 172.19.0.20
 
-  # TODO
-  # Datalayers
+  datalayers:
+    image: datalayers/datalayers:v2.2.1
+    container_name: datalayers
+    restart: always
+    hostname: datalayers
+    volumes:
+      - ./datalayers-data:/var/lib/datalayers
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.30
 
   jaeger:
     image: jaegertracing/all-in-one:1.51.0
     container_name: jaeger
     restart: always
+    ports:
+      - "16686:16686"
     networks:
       emqx-net:
         ipv4_address: 172.19.0.21
