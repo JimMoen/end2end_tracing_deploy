@@ -18,10 +18,10 @@ services:
     image: nginx:latest
     container_name: nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf  # 挂载 NGINX 配置文件
+      - ./nginx.conf:/etc/nginx/nginx.conf
     restart: always
     logging:
-      driver: "json-file"  # 将日志写入 Docker log 系统
+      driver: "json-file"
       options:
         max-size: "10m"
         max-file: "3"
@@ -32,7 +32,7 @@ services:
       - datalayers
 
   datalayers:
-    image: datalayers/datalayers:v2.2.1
+    image: datalayers/datalayers:v2.2.3
     container_name: datalayers
     restart: always
     hostname: datalayers
