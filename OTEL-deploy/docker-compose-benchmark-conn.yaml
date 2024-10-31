@@ -4,7 +4,7 @@ services:
     image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
     restart: always
     container_name: node1-bench1
-    command: ["conn", "-i", "2", "-h",  "172.19.0.2", "-u", "admin", "-P", "public123", "-c", "25000", "--prefix", "node1-bench1"]
+    command: "conn -i 2 -h 172.19.0.2 -u admin -P public123 -c ${BENCH_CONN_COUNT_PER_NODE:-25000} --prefix node1-bench1"
     hostname: node1-bench1
     networks:
       emqx-net:
@@ -14,7 +14,7 @@ services:
     image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
     restart: always
     container_name: node1-bench2
-    command: ["conn", "-i", "2", "-h",  "172.19.0.2", "-u", "admin", "-P", "public123", "-c", "25000", "--prefix", "node1-bench2"]
+    command: "conn -i 2 -h 172.19.0.2 -u admin -P public123 -c ${BENCH_CONN_COUNT_PER_NODE:-25000} --prefix node1-bench2"
     hostname: node1-bench2
     networks:
       emqx-net:
@@ -24,7 +24,7 @@ services:
     image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
     restart: always
     container_name: node2-bench1
-    command: ["conn", "-i", "2", "-h",  "172.19.0.3", "-u", "admin", "-P", "public123", "-c", "25000", "--prefix", "node2-bench1"]
+    command: "conn -i 2 -h 172.19.0.3 -u admin -P public123 -c ${BENCH_CONN_COUNT_PER_NODE:-25000} --prefix node2-bench1"
     hostname: node2-bench1
     networks:
       emqx-net:
@@ -34,7 +34,7 @@ services:
     image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
     restart: always
     container_name: node2-bench2
-    command: ["conn", "-i", "2", "-h",  "172.19.0.3", "-u", "admin", "-P", "public123", "-c", "25000", "--prefix", "node2-bench2"]
+    command: "conn -i 2 -h 172.19.0.3 -u admin -P public123 -c ${BENCH_CONN_COUNT_PER_NODE:-25000} --prefix node2-bench2"
     hostname: node2-bench2
     networks:
       emqx-net:

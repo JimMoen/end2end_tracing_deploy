@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: node1-sub-a
     hostname: node1-sub-a
-    command: "sub -h 172.19.0.2 --prefix node1-sub-a -t topic-a/%i -q 1 -i 2 -u admin -P public123 -c 1000"
+    command: "sub -h 172.19.0.2 --prefix node1-sub-a -t topic-a/%i -q ${BENCH_1T1_MSG_QOS:-1} -i 2 -u admin -P public123 -c ${BENCH_1T1_MSG_CLIENT_COUNT_SUB:-1000}"
     networks:
       emqx-net:
         ipv4_address: 172.19.0.31
@@ -15,7 +15,7 @@ services:
     restart: always
     container_name: node1-sub-c
     hostname: node1-sub-c
-    command: "sub -h 172.19.0.2 --prefix node1-sub-c -t topic-c/%i -q 1 -i 2 -u admin -P public123 -c 1000"
+    command: "sub -h 172.19.0.2 --prefix node1-sub-c -t topic-c/%i -q ${BENCH_1T1_MSG_QOS:-1} -i 2 -u admin -P public123 -c ${BENCH_1T1_MSG_CLIENT_COUNT_SUB:-1000}"
     networks:
       emqx-net:
         ipv4_address: 172.19.0.32
@@ -25,7 +25,7 @@ services:
     restart: always
     container_name: node2-sub-b
     hostname: node2-sub-b
-    command: "sub -h 172.19.0.3 --prefix node2-sub-b -t topic-b/%i -q 1 -i 2 -u admin -P public123 -c 1000"
+    command: "sub -h 172.19.0.3 --prefix node2-sub-b -t topic-b/%i -q ${BENCH_1T1_MSG_QOS:-1} -i 2 -u admin -P public123 -c ${BENCH_1T1_MSG_CLIENT_COUNT_SUB:-1000}"
     networks:
       emqx-net:
         ipv4_address: 172.19.0.33
@@ -35,7 +35,7 @@ services:
     restart: always
     container_name: node2-sub-d
     hostname: node2-sub-d
-    command: "sub -h 172.19.0.3 --prefix node2-sub-d -t topic-d/%i -q 1 -i 2 -u admin -P public123 -c 1000"
+    command: "sub -h 172.19.0.3 --prefix node2-sub-d -t topic-d/%i -q ${BENCH_1T1_MSG_QOS:-1} -i 2 -u admin -P public123 -c ${BENCH_1T1_MSG_CLIENT_COUNT_SUB:-1000}"
     networks:
       emqx-net:
         ipv4_address: 172.19.0.34
@@ -47,7 +47,7 @@ services:
     restart: always
     container_name: node1-pub-a
     hostname: node1-pub-a
-    command: "pub -h 172.19.0.2 --prefix node1-pub-a -t topic-a/%i -q 1 -s 10000 -i 2 -u admin -P public123 -c 1000 -L 1000000"
+    command: "pub -h 172.19.0.2 --prefix node1-pub-a -t topic-a/%i -q ${BENCH_1T1_MSG_QOS:-1} -s ${BENCH_1T1_MSG_PAYLOAD_SIZE:-10000} -i 2 -u admin -P public123 -c ${BENCH_1T1_MSG_CLIENT_COUNT_PUB:-1000} -L ${BENCH_1T1_MSG_PUB_LIMIT:-1000000}"
     depends_on:
       - node1-sub-a
       - node2-sub-b
@@ -62,7 +62,7 @@ services:
     restart: always
     container_name: node1-pub-b
     hostname: node1-pub-b
-    command: "pub -h 172.19.0.2 --prefix node1-pub-b -t topic-b/%i -q 1 -s 10000 -i 2 -u admin -P public123 -c 1000 -L 1000000"
+    command: "pub -h 172.19.0.2 --prefix node1-pub-b -t topic-b/%i -q ${BENCH_1T1_MSG_QOS:-1} -s ${BENCH_1T1_MSG_PAYLOAD_SIZE:-10000} -i 2 -u admin -P public123 -c ${BENCH_1T1_MSG_CLIENT_COUNT_PUB:-1000} -L ${BENCH_1T1_MSG_PUB_LIMIT:-1000000}"
     depends_on:
       - node1-sub-a
       - node2-sub-b
@@ -77,7 +77,7 @@ services:
     restart: always
     container_name: node2-pub-c
     hostname: node2-pub-c
-    command: "pub -h 172.19.0.3 --prefix node2-pub-c -t topic-c/%i -q 1 -s 10000 -i 2 -u admin -P public123 -c 1000 -L 1000000"
+    command: "pub -h 172.19.0.3 --prefix node2-pub-c -t topic-c/%i -q ${BENCH_1T1_MSG_QOS:-1} -s ${BENCH_1T1_MSG_PAYLOAD_SIZE:-10000} -i 2 -u admin -P public123 -c ${BENCH_1T1_MSG_CLIENT_COUNT_PUB:-1000} -L ${BENCH_1T1_MSG_PUB_LIMIT:-1000000}"
     depends_on:
       - node1-sub-a
       - node2-sub-b
@@ -92,7 +92,7 @@ services:
     restart: always
     container_name: node2-pub-d
     hostname: node2-pub-d
-    command: "pub -h 172.19.0.3 --prefix node2-pub-d -t topic-d/%i -q 1 -s 10000 -i 2 -u admin -P public123 -c 1000 -L 1000000"
+    command: "pub -h 172.19.0.3 --prefix node2-pub-d -t topic-d/%i -q ${BENCH_1T1_MSG_QOS:-1} -s ${BENCH_1T1_MSG_PAYLOAD_SIZE:-10000} -i 2 -u admin -P public123 -c ${BENCH_1T1_MSG_CLIENT_COUNT_PUB:-1000} -L ${BENCH_1T1_MSG_PUB_LIMIT:-1000000}"
     depends_on:
       - node1-sub-a
       - node2-sub-b
