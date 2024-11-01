@@ -8,6 +8,9 @@ services:
     volumes:
       - ./otel-trace-collector-config.yaml:/etc/otel-collector-config.yaml
     hostname: otel-collector
+    mem_limit: 2G
+    memswap_limit: 2G
+    cpus: 2.0
     networks:
       emqx-net:
         ipv4_address: 172.19.0.10 # 4317
@@ -46,6 +49,9 @@ services:
     image: jaegertracing/all-in-one:1.62.0
     container_name: jaeger
     restart: always
+    mem_limit: 8G
+    memswap_limit: 8G
+    cpus: 4.0
     networks:
       emqx-net:
         ipv4_address: 172.19.0.21
@@ -69,6 +75,9 @@ services:
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io
+    mem_limit: 8G
+    memswap_limit: 8G
+    cpus: 4.0
     depends_on:
       - otel-collector
 
@@ -91,6 +100,9 @@ services:
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io
+    mem_limit: 8G
+    memswap_limit: 8G
+    cpus: 4.0
     depends_on:
       - otel-collector
 
