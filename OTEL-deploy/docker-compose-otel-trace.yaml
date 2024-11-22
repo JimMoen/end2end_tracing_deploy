@@ -52,6 +52,8 @@ services:
     mem_limit: 8G
     memswap_limit: 8G
     cpus: 4.0
+    ports:
+      - 16686:16686
     networks:
       emqx-net:
         ipv4_address: 172.19.0.21
