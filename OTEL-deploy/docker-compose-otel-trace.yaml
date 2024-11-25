@@ -59,7 +59,7 @@ services:
         ipv4_address: 172.19.0.21
 
   emqx1:
-    image: emqx/emqx-enterprise:5.8.1-g71757287
+    image: emqx/emqx-enterprise:${EMQX_TAG}
     container_name: emqx1
     restart: always
     hostname: emqx1-cluster.emqx.io
@@ -84,7 +84,7 @@ services:
       - otel-collector
 
   emqx2:
-    image: emqx/emqx-enterprise:5.8.1-g71757287
+    image: emqx/emqx-enterprise:${EMQX_TAG}
     container_name: emqx2
     restart: always
     hostname: emqx2-cluster.emqx.io
