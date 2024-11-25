@@ -76,6 +76,7 @@ services:
       - EMQX_OPENTELEMETRY__EXPORTER__ENDPOINT="http://otel-collector:4317"
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
+      - EMQX_OPENTELEMETRY__TRACES__FILTER__E2E_TRACING_OPTIONS__CLUSTER_IDENTIFIER=emqxcl
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io
     mem_limit: 8G
     memswap_limit: 8G
@@ -101,6 +102,7 @@ services:
       - EMQX_OPENTELEMETRY__EXPORTER__ENDPOINT="http://otel-collector:4317"
       - EMQX_OPENTELEMETRY__TRACES__ENABLE=true
       - EMQX_OPENTELEMETRY__TRACES__FILTER__TRACE_ALL=true
+      - EMQX_OPENTELEMETRY__TRACES__FILTER__E2E_TRACING_OPTIONS__CLUSTER_IDENTIFIER=emqxcl
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io
     mem_limit: 8G
     memswap_limit: 8G
