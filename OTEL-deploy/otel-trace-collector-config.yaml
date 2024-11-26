@@ -29,15 +29,19 @@ exporters:
         - client.subscribe
         - client.unsubscribe
         - client.disconnect
-        table: client_events 
+        table: client_events
         span_dimensions:
         - client.clientid
         span_fields:
+        - cluster.id
         - service.instance.id
         - client.subscribe.topics
+        - client.subscribe.sub_opts
         - client.unsubscribe.topics
         - client.connect.authn.result
+        - authz.subscribe.topics
         - authz.subscribe.result
+        - authz.subscribe.reason_codes
         - authz.publish.result
 
       - key:
@@ -47,15 +51,6 @@ exporters:
         - message.deliver
         - message.forward
         - message.handle_forward
-        table: message_events
-        span_dimensions:
-        - message.topic
-        span_fields:
-        - message.from
-        - client.clientid
-        - service.instance.id
-
-      - key:
         - client.puback
         - client.pubrec
         - client.pubrel
@@ -64,12 +59,15 @@ exporters:
         - emqx.pubrec
         - emqx.pubrel
         - emqx.pubcomp
-        table: todo_events
+        table: message_events
         span_dimensions:
-        - service.name
-        - trace_id
+        - client.clientid
         span_fields:
-        - attr1
+        - cluster.id
+        - service.instance.id
+        - message.from
+        - message.topic
+        - message.msgid
 
   otlp:
     endpoint: jaeger:4317
@@ -83,6 +81,10 @@ processors:
       - key: 'otel.library.name'
         action: delete
       - key: 'otel.library.version'
+        action: delete
+      - key: 'otel.scope.name'
+        action: delete
+      - key: 'otel.scope.version'
         action: delete
       - key: 'process.executable.name'
         action: delete

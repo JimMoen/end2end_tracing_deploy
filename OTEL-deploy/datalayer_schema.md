@@ -62,7 +62,7 @@ __message_events__:
 ```sql
 CREATE TABLE `message_events` (
 time TIMESTAMP(9) NOT NULL,
-`message.topic` STRING NOT NULL,
+`client.clientid` STRING NOT NULL,
 `trace_id` STRING,
 `span_id` STRING,
 `span.name` STRING,
@@ -70,14 +70,14 @@ time TIMESTAMP(9) NOT NULL,
 `attributes` STRING,
 `end_time_unix_nano` INT64,
 `message.from` STRING,
-`client.clientid` STRING,
+`message.topic` STRING,
+`message.msgid` STRING,
 `duration_nano` INT64,
 `service.instance.id` STRING,
 `parent_span_id` STRING,
-`message.msgid` STRING,
 timestamp key(time)
 )
-PARTITION BY HASH (`message.topic`) PARTITIONS 1
+PARTITION BY HASH (`client.clientid`) PARTITIONS 1
 ENGINE=TimeSeries
 ```
 
@@ -88,7 +88,7 @@ show create table message_events;
 +----------------+------------------------------------------------+
 | message_events | CREATE TABLE `message_events` (                |
 |                | time TIMESTAMP(9) NOT NULL,                    |
-|                | message.topic STRING NOT NULL,                 |
+|                | client.clientid STRING NOT NULL,               |
 |                | trace_id STRING,                               |
 |                | span_id STRING,                                |
 |                | span.name STRING,                              |
@@ -96,7 +96,7 @@ show create table message_events;
 |                | attributes STRING,                             |
 |                | end_time_unix_nano INT64,                      |
 |                | message.from STRING,                           |
-|                | client.clientid STRING,                        |
+|                | message.topic STRING,                          |
 |                | duration_nano INT64,                           |
 |                | service.instance.id STRING,                    |
 |                | parent_span_id STRING,                         |
