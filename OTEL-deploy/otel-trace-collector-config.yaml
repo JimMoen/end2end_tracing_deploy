@@ -47,18 +47,17 @@ exporters:
       - key:
         - client.publish
         - message.route
-        - message.dispatch
-        - message.deliver
         - message.forward
         - message.handle_forward
+        - broker.publish
         - client.puback
         - client.pubrec
         - client.pubrel
         - client.pubcomp
-        - emqx.puback
-        - emqx.pubrec
-        - emqx.pubrel
-        - emqx.pubcomp
+        - broker.puback
+        - broker.pubrec
+        - broker.pubrel
+        - broker.pubcomp
         table: message_events
         span_dimensions:
         - client.clientid

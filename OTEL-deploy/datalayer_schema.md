@@ -1,5 +1,5 @@
 Schemas
-将所有的 trace 事件存储到一下 2 个表中：
+将所有的 trace 事件存储到以下 2 个表中：
 
 __client_events__:
 
