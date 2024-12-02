@@ -35,7 +35,7 @@ services:
       - datalayers
 
   datalayers:
-    image: datalayers/datalayers:v2.2.3
+    image: datalayers/datalayers:v2.2.5
     container_name: datalayers
     restart: always
     hostname: datalayers
