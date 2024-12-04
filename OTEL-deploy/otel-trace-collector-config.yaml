@@ -29,6 +29,9 @@ exporters:
         - client.subscribe
         - client.unsubscribe
         - client.disconnect
+        - broker.subscribe
+        - broker.unsubscribe
+        - broker.disconnect
         table: client_events
         span_dimensions:
         - client.clientid
