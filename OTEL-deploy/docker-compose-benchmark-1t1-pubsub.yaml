@@ -1,7 +1,7 @@
 services:
 
   node1-sub-a:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node1-sub-a
     hostname: node1-sub-a
@@ -11,7 +11,7 @@ services:
         ipv4_address: 172.19.0.31
 
   node1-sub-c:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node1-sub-c
     hostname: node1-sub-c
@@ -21,7 +21,7 @@ services:
         ipv4_address: 172.19.0.32
 
   node2-sub-b:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node2-sub-b
     hostname: node2-sub-b
@@ -31,7 +31,7 @@ services:
         ipv4_address: 172.19.0.33
 
   node2-sub-d:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node2-sub-d
     hostname: node2-sub-d
@@ -43,7 +43,7 @@ services:
 
 
   node1-pub-a:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node1-pub-a
     hostname: node1-pub-a
@@ -58,7 +58,7 @@ services:
         ipv4_address: 172.19.0.41
 
   node1-pub-b:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node1-pub-b
     hostname: node1-pub-b
@@ -73,7 +73,7 @@ services:
         ipv4_address: 172.19.0.42
 
   node2-pub-c:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node2-pub-c
     hostname: node2-pub-c
@@ -88,7 +88,7 @@ services:
         ipv4_address: 172.19.0.43
 
   node2-pub-d:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node2-pub-d
     hostname: node2-pub-d

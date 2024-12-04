@@ -1,7 +1,7 @@
 services:
 
   node1-sub-unsub:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node1-sub-unsub
     command: "sub -q ${BENCH_SUB_UNSUB_QOS:-1} -i 1 -h 172.19.0.2 -u admin -P public123 -c ${BENCH_SUB_UNSUB_CLIENT_COUNT_PER_NODE:-500} --prefix n1-sub-unsub --multi-topic --multi-topic-count ${BENCH_SUB_UNSUB_TOPIC_COUNT:-500}"
@@ -11,7 +11,7 @@ services:
         ipv4_address: 172.19.0.41
 
   node2-sub-unsub:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node2-sub-unsub
     command: "sub -q ${BENCH_SUB_UNSUB_QOS:-1} -i 1 -h 172.19.0.3 -u admin -P public123 -c ${BENCH_SUB_UNSUB_CLIENT_COUNT_PER_NODE:-500} --prefix n2-sub-unsub --multi-topic --multi-topic-count ${BENCH_SUB_UNSUB_TOPIC_COUNT:-500}"

@@ -1,7 +1,7 @@
 services:
 
   node1-bench1:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node1-bench1
     command: "conn -i 2 -h 172.19.0.2 -u admin -P public123 -c ${BENCH_CONN_COUNT_PER_NODE:-25000} --prefix node1-bench1"
@@ -11,7 +11,7 @@ services:
         ipv4_address: 172.19.0.31
 
   node1-bench2:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node1-bench2
     command: "conn -i 2 -h 172.19.0.2 -u admin -P public123 -c ${BENCH_CONN_COUNT_PER_NODE:-25000} --prefix node1-bench2"
@@ -21,7 +21,7 @@ services:
         ipv4_address: 172.19.0.32
 
   node2-bench1:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node2-bench1
     command: "conn -i 2 -h 172.19.0.3 -u admin -P public123 -c ${BENCH_CONN_COUNT_PER_NODE:-25000} --prefix node2-bench1"
@@ -31,7 +31,7 @@ services:
         ipv4_address: 172.19.0.33
 
   node2-bench2:
-    image: emqx/emqtt_bench:${EMQTT_BENCH_TAG}
+    image: ${EMQTT_BENCH_IMAGE}
     restart: always
     container_name: node2-bench2
     command: "conn -i 2 -h 172.19.0.3 -u admin -P public123 -c ${BENCH_CONN_COUNT_PER_NODE:-25000} --prefix node2-bench2"
