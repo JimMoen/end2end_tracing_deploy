@@ -12,13 +12,25 @@ exporters:
     db: mydb
     username: admin
     password: public
+    metrics_schema: telegraf-prometheus-v1
     timeout: 500ms
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_elapsed_time: 10s
+      max_interval: 3s
+    sending_queue:
+      enabled: true
+      num_consumers: 3
+      queue_size: 1000
     trace:
       table: spans
       span_dimensions:
       - service.name
+      - span_id
       - trace_id
-      span_fields: []
+      span_fields:
+      - span.mytype
       custom_key_scope: name
       custom:
       - key:
@@ -35,8 +47,10 @@ exporters:
         table: client_events
         span_dimensions:
         - client.clientid
-        span_fields:
         - cluster.id
+        - span.name
+        span_fields:
+        - service.name
         - service.instance.id
         - client.subscribe.topics
         - client.subscribe.sub_opts
@@ -64,8 +78,10 @@ exporters:
         table: message_events
         span_dimensions:
         - client.clientid
-        span_fields:
         - cluster.id
+        - span.name
+        span_fields:
+        - service.name
         - service.instance.id
         - message.from
         - message.topic
