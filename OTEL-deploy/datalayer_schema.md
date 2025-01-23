@@ -1,18 +1,17 @@
-Schemas
-创建数据库
+# All DataLayers Schema and SQLs
+
+- Login
 ```bash
 $ dlsql -u admin -p public
 ```
 
+- Create database and use it
 ```sql
 create database mydb
-```
-
-```sql
 use mydb
 ```
 
-将所有的 trace 事件存储到以下 2 个表中：
+## Trace events in the following two tables
 
 __client_events__:
 
@@ -88,18 +87,6 @@ show create table client_events
 +---------------+-------------------------------------------------------------------------------+
 ```
 
-```sql
-drop table client_events
-```
-
-```sql
-select count(*) from client_events
-```
-
-```sql
-select span_id, parent_span_id, span_name, client_clientid from client_events
-```
-
 __message_events__:
 
 ```sql
@@ -168,14 +155,31 @@ show create table message_events
 +----------------+-------------------------------------------------------------------------------+
 ```
 
+
+## Table management
+
 ```sql
-drop table message_events
+truncate table client_events
+truncate table message_events
 ```
 
 ```sql
+select count(*) from client_events
 select count(*) from message_events
 ```
 
 ```sql
+select span_id, parent_span_id, span_name, client_clientid from client_events
 select span_id, parent_span_id, span_name, client_clientid from message_events
+```
+
+
+```sql
+select count(distinct trace_id) from message_events
+select count(distinct trace_id) from client_events
+```
+
+```sql
+select span_name, count(distinct trace_id) as count from message_events group by span_name
+select span_name, count(distinct trace_id) as count from client_events group by span_name
 ```
