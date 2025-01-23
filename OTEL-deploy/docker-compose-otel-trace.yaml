@@ -17,23 +17,6 @@ services:
     depends_on:
       - datalayers
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    restart: always
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    networks:
-      emqx-net:
-        ipv4_address: 172.19.0.19
-    depends_on:
-      - datalayers
-
   datalayers:
     image: datalayers/datalayers:v2.2.8
     container_name: datalayers
@@ -84,7 +67,7 @@ services:
       - EMQX_OPENTELEMETRY__TRACES__FILTER__E2E_TRACING_OPTIONS__SAMPLE_RATIO="100%"
       - EMQX_OPENTELEMETRY__TRACES__FILTER__E2E_TRACING_OPTIONS__MSG_TRACE_LEVEL=2
       - EMQX_OPENTELEMETRY__TRACES__MAX_QUEUE_SIZE=50000
-      - EMQX_OPENTELEMETRY__TRACES__SCHEDULED_DELAY=1000
+      - EMQX_OPENTELEMETRY__TRACES__SCHEDULED_DELAY=100
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io
     mem_limit: 8G
     memswap_limit: 8G
@@ -118,7 +101,7 @@ services:
       - EMQX_OPENTELEMETRY__TRACES__FILTER__E2E_TRACING_OPTIONS__SAMPLE_RATIO="100%"
       - EMQX_OPENTELEMETRY__TRACES__FILTER__E2E_TRACING_OPTIONS__MSG_TRACE_LEVEL=2
       - EMQX_OPENTELEMETRY__TRACES__MAX_QUEUE_SIZE=50000
-      - EMQX_OPENTELEMETRY__TRACES__SCHEDULED_DELAY=1000
+      - EMQX_OPENTELEMETRY__TRACES__SCHEDULED_DELAY=100
       - EMQX_CLUSTER__STATIC__SEEDS=emqx1@emqx1-cluster.emqx.io,emqx2@emqx2-cluster.emqx.io
     mem_limit: 8G
     memswap_limit: 8G

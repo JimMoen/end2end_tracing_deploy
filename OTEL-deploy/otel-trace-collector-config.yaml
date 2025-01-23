@@ -3,17 +3,19 @@ receivers:
     protocols:
       grpc:
         endpoint: 0.0.0.0:4317
+        max_recv_msg_size_mib: 33554432
       http:
         endpoint: 0.0.0.0:4318
 
 exporters:
   datalayers:
-    endpoint: http://nginx:8086
+    endpoint: http://datalayers:8361
     db: mydb
     username: admin
     password: public
+    payload_max_bytes: 2000000
     metrics_schema: telegraf-prometheus-v1
-    timeout: 500ms
+    timeout: 10s
     retry_on_failure:
       enabled: true
       initial_interval: 1s
