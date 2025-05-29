@@ -1,7 +1,5 @@
-datalayers
 emqx1-data
 emqx2-data
 emqx3-data
 influxdb-v1-data
 influxdb-v2-data
-datalayers-data

@@ -1,7 +1,7 @@
 services:
 
   otel-collector:
-    image: emqxecp/otelcol:test
+    image: otel/opentelemetry-collector:0.127.0
     restart: always
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
@@ -14,36 +14,17 @@ services:
     networks:
       emqx-net:
         ipv4_address: 172.19.0.10 # 4317
-    depends_on:
-      - datalayers
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
     restart: always
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    hostname: prometheus
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
     networks:
       emqx-net:
-        ipv4_address: 172.19.0.19
-    depends_on:
-      - datalayers
-
-  datalayers:
-    image: datalayers/datalayers:v2.2.8
-    container_name: datalayers
-    restart: always
-    hostname: datalayers
-    volumes:
-      - ./datalayers-data:/var/lib/datalayers
-    networks:
-      emqx-net:
-        ipv4_address: 172.19.0.30
+        ipv4_address: 172.19.0.31
 
   jaeger:
     image: jaegertracing/all-in-one:1.62.0
