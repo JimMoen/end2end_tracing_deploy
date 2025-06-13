@@ -4,4 +4,4 @@ scrape_configs:
     scrape_interval: 10s
     static_configs:
       - targets: ['otel-collector:8889'] # emqx metrics
-      - targets: ['otel-collector:8888'] # collector metrics
+      - targets: ['otel-collector:18888'] # collector metrics

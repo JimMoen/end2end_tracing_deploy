@@ -1,7 +1,7 @@
 services:
 
   otel-collector:
-    image: otel/opentelemetry-collector:0.127.0
+    image: otel/opentelemetry-collector-contrib:0.127.0
     restart: always
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
@@ -21,7 +21,7 @@ services:
     restart: always
     hostname: prometheus
     volumes:
-      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
     networks:
       emqx-net:
         ipv4_address: 172.19.0.31
@@ -33,8 +33,6 @@ services:
     mem_limit: 8G
     memswap_limit: 8G
     cpus: 4.0
-    ports:
-      - 16686:16686
     networks:
       emqx-net:
         ipv4_address: 172.19.0.21
