@@ -1,7 +1,7 @@
 services:
 
   otel-collector:
-    image: emqxecp/otelcol:test
+    image: emqxecp/otelcol:2.6.0-beta.3
     restart: always
     container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
@@ -35,7 +35,7 @@ services:
       - datalayers
 
   datalayers:
-    image: datalayers/datalayers:v2.2.8
+    image: datalayers/datalayers:v2.3.3
     container_name: datalayers
     restart: always
     hostname: datalayers

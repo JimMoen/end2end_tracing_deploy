@@ -13,11 +13,19 @@ exporters:
     username: admin
     password: public
     timeout: 500ms
+    sending_queue:
+      enabled: true
+      num_consumers: 10
+      queue_size: 5000
+    retry_on_failure:
+      enabled: true
+      initial_interval: 5s
+      max_interval: 30s
+      max_elapsed_time: 120s
     trace:
       table: spans
       span_dimensions:
       - service.name
-      - trace_id
       span_fields: []
       custom_key_scope: name
       custom:
@@ -25,7 +33,8 @@ exporters:
         - client.connect
         - client.authn
         - client.authz
-        - client.connack
+        - client.authn_backend
+        - client.authz_backend
         - client.subscribe
         - client.unsubscribe
         - client.disconnect
@@ -35,8 +44,10 @@ exporters:
         table: client_events
         span_dimensions:
         - client.clientid
-        span_fields:
         - cluster.id
+        - span.name
+        span_fields:
+        - service.name
         - service.instance.id
         - client.subscribe.topics
         - client.subscribe.sub_opts
@@ -46,7 +57,6 @@ exporters:
         - authz.subscribe.result
         - authz.subscribe.reason_codes
         - authz.publish.result
-
       - key:
         - client.publish
         - message.route
@@ -64,8 +74,10 @@ exporters:
         table: message_events
         span_dimensions:
         - client.clientid
-        span_fields:
         - cluster.id
+        - span.name
+        span_fields:
+        - service.name
         - service.instance.id
         - message.from
         - message.topic
