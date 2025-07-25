@@ -5,3 +5,4 @@ emqx3-data
 influxdb-v1-data
 influxdb-v2-data
 datalayers-data
+prometheus-data

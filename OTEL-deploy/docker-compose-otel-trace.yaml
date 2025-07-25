@@ -45,6 +45,31 @@ services:
       emqx-net:
         ipv4_address: 172.19.0.30
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    user: root
+    hostname: prometheus
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      - ./prometheus-data:/prometheus
+    depends_on:
+      - datalayers
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.40
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    hostname: grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      emqx-net:
+        ipv4_address: 172.19.0.41
+
   jaeger:
     image: jaegertracing/all-in-one:1.62.0
     container_name: jaeger
@@ -132,3 +157,6 @@ networks:
       config:
         - subnet: 172.19.0.0/16
     driver: bridge
+
+volumes:
+  grafana-data:

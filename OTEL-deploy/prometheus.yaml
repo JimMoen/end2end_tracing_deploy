@@ -1,0 +1,46 @@
+# prometheus.yaml
+global:
+  scrape_interval:     10s # The default scrape interval is every 10 seconds.
+  evaluation_interval: 10s # The default evaluation interval is every 10 seconds.
+  # On this machine, every time series will be exported by default.
+  external_labels:
+    monitor: 'emqx-monitor'
+scrape_configs:
+  - job_name: 'emqx'
+    static_configs:
+      - targets: ['172.19.0.1:18083']
+    metrics_path: '/api/v5/prometheus/stats'
+    scheme: 'http'
+    basic_auth:
+      username: ''
+      password: ''
+
+  - job_name: 'emqx_auth'
+    static_configs:
+      - targets: ['172.19.0.1:18083']
+    metrics_path: '/api/v5/prometheus/auth'
+    scheme: 'http'
+    basic_auth:
+      username: ''
+      password: ''
+
+  - job_name: 'emqx_data_integration'
+    static_configs:
+      - targets: ['172.19.0.1:18083']
+    metrics_path: '/api/v5/prometheus/data_integration'
+    scheme: 'http'
+    basic_auth:
+      username: ''
+      password: ''
+
+  - job_name: datalayers
+    honor_timestamps: true
+    scrape_interval: 5s
+    scrape_timeout: 5s
+    metrics_path: /metrics
+    scheme: http
+    follow_redirects: true
+    enable_http2: true
+    static_configs:
+      # Your Datalayers HTTP Server address
+      - targets: ["datalayers:8361"]
